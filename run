@@ -1,0 +1,28 @@
+#!/bin/bash
+while true
+do
+	touch /tmp/fastlog
+	
+	echo "Running Bandwith test..."
+    
+	/usr/src/app/node_modules/.bin/fast --upload --single-line | tail -n 1 > /tmp/fastlog
+
+	echo "Bandwith test finished."
+	
+	cat /tmp/fastlog
+
+	DOWN=$(cat /tmp/fastlog | cut -d' ' -f5)
+	UP=$(cat /tmp/fastlog | cut -d' ' -f9)
+
+	if (( DOWN < 3 )); then
+		DOWN=$(($DOWN * 1000))
+	fi
+
+	echo "Sending Data to Mysql..."
+
+    mysql -u $MYSQL_USER -p$MYSQL_PASS -D $MYSQL_DATABASE -h $MYSQL_SERVER -e "INSERT INTO $MYSQL_TABLE (loc,download,upload) values ('$LOC','$DOWN','$UP')"
+
+	echo "Waiting for $SLEEP Seconds to continue..."
+	
+	sleep $SLEEP 
+done
