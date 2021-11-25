@@ -15,8 +15,8 @@ do
 	DOWN=$(cat /tmp/fastlog | cut -d' ' -f5)
 	UP=$(cat /tmp/fastlog | cut -d' ' -f9)
 
-	if (( DOWN < 3 )); then
-		DOWN=$(($DOWN * 1000))
+	if (( $(echo "$DOWN < 3" | bc -l)  )); then
+		DOWN=$(echo "$DOWN * 1000" | bc -l)
 	fi
 
 	echo "Sending Data to Mysql..."
