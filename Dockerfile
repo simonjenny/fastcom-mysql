@@ -19,6 +19,7 @@ WORKDIR /usr/src/app
 RUN npm i fast-cli
 
 COPY run /usr/src/app/run
+RUN chmod a+x /usr/src/app/run
 
 WORKDIR /usr/src/app
 CMD /usr/src/app/run
